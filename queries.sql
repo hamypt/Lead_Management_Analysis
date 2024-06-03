@@ -1,11 +1,11 @@
 -- NUMBER OF LEADS BY SOURCE
 
-SELECT 
+SELECT
 	CASE 
 		WHEN lead_source IN ('trade show', 'CDC Conference 2024', 'FDB Conference 2023', 'Tech Expo 2024', 
 		'Medical Conference 2024', 'Tech Expo 2023', 'Medical Conference 2023', 'conference') THEN 'event'
 		ELSE lead_source
-    END AS 'Lead Source',
+    	END AS 'Lead Source',
 	COUNT(*) AS 'Total Leads'
 FROM leads 
 GROUP BY 
@@ -13,7 +13,7 @@ GROUP BY
 		WHEN lead_source IN ('trade show', 'CDC Conference 2024', 'FDB Conference 2023', 'Tech Expo 2024', 
 		'Medical Conference 2024', 'Tech Expo 2023', 'Medical Conference 2023', 'conference') THEN 'event'
 		ELSE lead_source
-    END
+    	END
 ORDER BY COUNT(*) DESC
 ;
 
@@ -22,7 +22,7 @@ ORDER BY COUNT(*) DESC
 
 SELECT 
 	lead_status AS 'Lead Status',
-    COUNT(*) AS 'Total Leads'
+    	COUNT(*) AS 'Total Leads'
 FROM leads
 GROUP BY lead_status
 ORDER BY COUNT(*) DESC
@@ -33,7 +33,7 @@ ORDER BY COUNT(*) DESC
 
 SELECT 
 	industry AS 'Industry',
-    COUNT(*) AS 'Total Leads'
+    	COUNT(*) AS 'Total Leads'
 FROM leads
 GROUP BY industry
 ORDER BY COUNT(*) DESC
@@ -72,8 +72,8 @@ SELECT
 		WHEN lead_source IN ('trade show', 'CDC Conference 2024', 'FDB Conference 2023', 'Tech Expo 2024', 
 		'Medical Conference 2024', 'Tech Expo 2023', 'Medical Conference 2023', 'conference') THEN 'event'
 		ELSE lead_source
-    END AS 'Lead Source',
-    COUNT(*) AS 'Total Leads',
+    	END AS 'Lead Source',
+    	COUNT(*) AS 'Total Leads',
 	SUM(CASE WHEN lead_status = 'Converted' THEN 1 ELSE 0 END) AS 'Converted Leads',
 	(SUM(CASE WHEN lead_status = 'Converted' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS 'Conversion Rate'
 FROM leads
@@ -82,7 +82,7 @@ GROUP BY
 		WHEN lead_source IN ('trade show', 'CDC Conference 2024', 'FDB Conference 2023', 'Tech Expo 2024', 
 		'Medical Conference 2024', 'Tech Expo 2023', 'Medical Conference 2023', 'conference') THEN 'event'
 		ELSE lead_source
-    END
+    	END
 ORDER BY (SUM(CASE WHEN lead_status = 'Converted' THEN 1 ELSE 0 END) / COUNT(*)) * 100 DESC
 ;
 
@@ -91,9 +91,9 @@ ORDER BY (SUM(CASE WHEN lead_status = 'Converted' THEN 1 ELSE 0 END) / COUNT(*))
 
 SELECT 
 	industry AS 'Industry',
-    COUNT(*) AS 'Total Leads',
-    SUM( CASE WHEN lead_status = 'converted' THEN 1 ELSE 0 END) AS 'Converted Leads',
-    (SUM( CASE WHEN lead_status = 'converted' THEN 1 ELSE 0 END)) / COUNT(*) *100 AS 'Conversion Rate'
+    	COUNT(*) AS 'Total Leads',
+    	SUM( CASE WHEN lead_status = 'converted' THEN 1 ELSE 0 END) AS 'Converted Leads',
+    	(SUM( CASE WHEN lead_status = 'converted' THEN 1 ELSE 0 END)) / COUNT(*) *100 AS 'Conversion Rate'
 FROM leads
 GROUP BY industry
 ORDER BY (SUM( CASE WHEN lead_status = 'converted' then 1 else 0 end)) / COUNT(*) *100 DESC
@@ -104,7 +104,7 @@ ORDER BY (SUM( CASE WHEN lead_status = 'converted' then 1 else 0 end)) / COUNT(*
 
 SELECT
 	lead_status AS 'Lead Status',
-    AVG(DATEDIFF('2024-06-01', created_date)) AS 'Average Days in Stage'
+    	AVG(DATEDIFF('2024-06-01', created_date)) AS 'Average Days in Stage'
 FROM leads
 GROUP BY lead_status
 ORDER BY AVG(DATEDIFF('2024-06-01', created_date))
@@ -135,13 +135,13 @@ ORDER BY COUNT(DISTINCT COALESCE(a.lead_id, i.lead_id)) DESC
 
 SELECT
 	l.lead_id AS 'Lead ID',
-    l.company AS 'Customer',
-    l.industry AS 'Industry',
-    l.lead_source AS 'Lead Source',
-    l.country AS 'Country',
-    o.product_interest AS 'Product Interest',
-    DATEDIFF('2024-06-01', l.created_date) AS 'Age',
-    COUNT(i.interaction_type) AS 'Total Interactions'
+    	l.company AS 'Customer',
+    	l.industry AS 'Industry',
+    	l.lead_source AS 'Lead Source',
+    	l.country AS 'Country',
+    	o.product_interest AS 'Product Interest',
+    	DATEDIFF('2024-06-01', l.created_date) AS 'Age',
+    	COUNT(i.interaction_type) AS 'Total Interactions'
 FROM leads AS l
 INNER JOIN opportunities AS o ON l.lead_id = o.lead_id
 LEFT JOIN interactions AS i ON l.lead_id = i.lead_id
@@ -154,10 +154,10 @@ GROUP BY l.lead_id, l.company, l.industry, l.lead_source, l.country, o.product_i
 
 SELECT
 	l.lead_id AS 'Lead ID',
-    l.company AS 'Company',
-    l.lead_status AS 'Lead Status',
-    DATEDIFF('2024-06-01', l.created_date) AS 'Days in Pipeline',
-    COUNT(i.lead_id) AS 'Total Interactions'
+    	l.company AS 'Company',
+    	l.lead_status AS 'Lead Status',
+    	DATEDIFF('2024-06-01', l.created_date) AS 'Days in Pipeline',
+    	COUNT(i.lead_id) AS 'Total Interactions'
 FROM leads AS l
 LEFT JOIN interactions AS i ON l.lead_id = i.lead_id
 WHERE l.lead_status NOT IN ('converted', 'lost')
@@ -170,12 +170,12 @@ ORDER BY DATEDIFF('2024-06-01', l.created_date) DESC
 
 SELECT
 	l.lead_id AS 'Lead ID',
-    l.company AS 'Customer',
-    l.industry AS 'Industry',
-    l.lead_source AS 'Lead Source',
-    l.country AS 'Country',
-    o.product_interest AS 'Product Interest',
-    COUNT(i.interaction_type) AS 'Total Interactions'
+    	l.company AS 'Customer',
+    	l.industry AS 'Industry',
+    	l.lead_source AS 'Lead Source',
+    	l.country AS 'Country',
+    	o.product_interest AS 'Product Interest',
+    	COUNT(i.interaction_type) AS 'Total Interactions'
 FROM leads AS l
 LEFT JOIN opportunities AS o ON l.lead_id = o.lead_id
 LEFT JOIN interactions AS i ON l.lead_id = i.lead_id
@@ -188,12 +188,12 @@ GROUP BY l.lead_id, l.company, l.industry, l.lead_source, l.country, o.product_i
 
 SELECT 
 	l.company AS 'Company',
-    l.lead_id AS 'Lead ID',
-    l.industry AS 'Industry',
-    l.lead_source AS 'Lead Source',
-    l.region AS 'Region',
-    i.interaction_type AS 'Interaction Type',
-    DATEDIFF('2024-06-01', l.created_date) AS 'Days in Pipeline'
+    	l.lead_id AS 'Lead ID',
+    	l.industry AS 'Industry',
+    	l.lead_source AS 'Lead Source',
+    	l.region AS 'Region',
+    	i.interaction_type AS 'Interaction Type',
+    	DATEDIFF('2024-06-01', l.created_date) AS 'Days in Pipeline'
 FROM leads AS l 
 LEFT JOIN interactions AS i ON l.lead_id = i.lead_id
 WHERE l.lead_status = 'lost'
@@ -225,8 +225,8 @@ ORDER BY
 -- OPPORTUNITIES AND ESTIMATED VALUE BY STAGE
 
 SELECT
-    stage AS 'Stage', 
-    COUNT(*) AS 'Number of Opportunities',
+    	stage AS 'Stage', 
+    	COUNT(*) AS 'Number of Opportunities',
 	SUM(estimated_value) AS 'Total Estimated Value'
 FROM opportunities
 GROUP BY stage
@@ -238,8 +238,8 @@ ORDER BY COUNT(*) DESC
 
 SELECT
 	product_interest AS 'Product Interest',
-    COUNT(*) AS 'Number of Opportunities',
-    SUM(estimated_value) AS 'Total Estimated Value'
+    	COUNT(*) AS 'Number of Opportunities',
+    	SUM(estimated_value) AS 'Total Estimated Value'
 FROM opportunities
 GROUP BY product_interest
 ORDER BY SUM(estimated_value) DESC
