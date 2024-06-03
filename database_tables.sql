@@ -1,57 +1,59 @@
 -- -- CREATE DATABASE TABLES AND DEFINE FOREIGN KEYS
 
 CREATE TABLE leads (
-  lead_id INT PRIMARY KEY,
-  first_name VARCHAR(100),
-  last_name VARCHAR(100),
-  email VARCHAR(100),
-  phone VARCHAR(30),
-  company VARCHAR(100),
-  industry VARCHAR(50),
-  lead_source VARCHAR(100),
-  lead_status ENUM('new', 'contacted', 'qualified', 'converted', 'lost'),
-  created_date DATE,
-  last_contacted_date DATE
+	lead_id INT PRIMARY KEY,
+	first_name VARCHAR(100),
+	last_name VARCHAR(100),
+	email VARCHAR(100),
+	phone VARCHAR(30),
+	company VARCHAR(100),
+	industry VARCHAR(50),
+	lead_source VARCHAR(100),
+	lead_status ENUM('new', 'contacted', 'qualified', 'converted', 'lost'),
+	created_date DATE,
+	last_contacted_date DATE
 );
 
 CREATE TABLE sales_team (
-  user_id INT PRIMARY KEY,
-  first_name VARCHAR(100),
-  last_name VARCHAR(100),
-  email VARCHAR(100),
-  phone VARCHAR(30),
-  department VARCHAR(100)
+	user_id INT PRIMARY KEY,
+	first_name VARCHAR(100),
+	last_name VARCHAR(100),
+	email VARCHAR(100),
+	phone VARCHAR(30),
+	department VARCHAR(100)
 );
 
 CREATE TABLE interactions (
-  interaction_id INT PRIMARY KEY,
-  lead_id INT,
-  user_id INT,
-  interaction_date DATE,
-  interaction_type VARCHAR(100),
-  notes VARCHAR(1000),
-  FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE SET NULL,
-  FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE SET NULL
+	interaction_id INT PRIMARY KEY,
+	lead_id INT,
+	user_id INT,
+	interaction_date DATE,
+	interaction_type VARCHAR(100),
+	notes VARCHAR(1000),
+	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE SET NULL,
+	FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE lead_assignments (
-  assignment_id INT PRIMARY KEY,
-  lead_id INT,
-  user_id INT,
-  assignment_date DATE,
-  FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE CASCADE
+	assignment_id INT PRIMARY KEY,
+	lead_id INT,
+	user_id INT,
+	assignment_date DATE,
+	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE CASCADE
 ); 
 
 CREATE TABLE opportunities (
-  opportunity_id INT PRIMARY KEY,
-  lead_id INT,
-  product_interest VARCHAR(100),
-  estimated_value INT,
-  stage ENUM('prospecting', 'qualification', 'proposal', 'negotiation', 'closed'),
-  initiated_by INT,
-  FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE SET NULL,
-  FOREIGN KEY (initiated_by) REFERENCES sales_team(user_id) ON DELETE SET NULL
+	opportunity_id INT PRIMARY KEY,
+	lead_id INT,
+	product_interest VARCHAR(100),
+	estimated_value INT,
+	stage ENUM('prospecting', 'qualification', 'proposal', 'negotiation', 'closed'),
+	initiated_by INT,
+	assigned_to INT,
+	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE SET NULL,
+	FOREIGN KEY (initiated_by) REFERENCES sales_team(user_id) ON DELETE SET NULL,
+	FOREIGN KEY (assigned_to) REFERENCES lead_assignments(user_id) ON DELETE SET NULL
 );
 
 -- -----------------------------------------------------------------------------
@@ -61,7 +63,7 @@ CREATE TABLE opportunities (
 INSERT INTO leads VALUES 
     (99, 'Mikael', 'Wallin', 'mikael.wallin@abcinc.com', '1234567890', 'ABC Inc.', 'Technology', 'referral', 'new', '2024-02-01', '2024-05-10'),
     (100, 'Ida', 'Stromberg', 'ida.stromberg@defcorp.com', '1234567891', 'DEF Corp.', 'Healthcare', 'CDC Conference 2024', 'contacted', '2024-04-01', '2024-05-12'),
-    (101, 'Jakob', 'Honkanen', 'jakob.honkanen@flexirsolutions.com', '1234567892', 'Flexir Solutions', 'Manufacturing', 'referral', 'lost', '2023-11-20', '2024-05-15'),
+    (101, 'Jakob', 'Honkanen', 'jakob.honkanen@flexirsolutions.com', '1234567892', 'Flexir Solutions', 'Manufacturing', 'email campaign', 'lost', '2023-11-20', '2024-05-15'),
     (102, 'Lotte', 'van den Berg', 'lotte.vandenburg@hscentral.com', '1234567893', 'Highlands Central', 'Food and Beverages', 'FDB Conference 2023', 'contacted', '2023-05-02', '2024-05-10'),
     (103, 'Saara', 'Karppinen', 'saara.karppinen@flygp.com', '1234567894', 'Flygp', 'Technology', 'website', 'qualified', '2023-04-05', '2024-05-15'),
     (104, 'Ali', 'Ubegen', 'ali.ubegen@uniq.com', '1234567895', 'Uniq Inc.', 'Transportation', 'referral', 'converted', '2023-06-20', '2024-05-10'),
@@ -81,7 +83,7 @@ INSERT INTO leads VALUES
     (118, 'Linnea', 'Peltola', 'linnea.peltola@healthysolutions.com', '1234567909', 'Healthy Solutions', 'Healthcare', 'Email Campaign', 'qualified', '2023-12-10', '2024-05-15'),
     (119, 'Eetu', 'Jokinen', 'eetu.jokinen@techtools.com', '1234567910', 'Tech Tools Ltd.', 'Technology', 'Website', 'new', '2024-01-20', '2024-05-12'),
     (120, 'Julia', 'Laine', 'julia.laine@modernminds.com', '1234567911', 'Modern Minds', 'Technology', 'Trade Show', 'contacted', '2023-09-01', '2024-05-10'),
-    (121, 'Eemil', 'Lehtinen', 'eemil.lehtinen@toplineconsulting.com', '1234567912', 'Topline Consulting', 'Consulting', 'Cold Call', 'contacted', '2023-10-05', '2024-05-10'),
+    (121, 'Eemil', 'Lehtinen', 'eemil.lehtinen@toplineconsulting.com', '1234567912', 'Topline Consulting', 'Consulting', 'Cold Call', 'lost', '2023-10-05', '2024-05-10'),
     (122, 'Helmi', 'Kallio', 'helmi.kallio@aquacorp.com', '1234567913', 'AquaCorp Ltd.', 'Water Management', 'Trade Show', 'contacted', '2023-08-15', '2024-05-10'),
     (123, 'Aatu', 'Rinne', 'aatu.rinne@techsavvy.com', '1234567914', 'TechSavvy Solutions', 'Technology', 'Email Campaign', 'contacted', '2023-11-02', '2024-05-10'),
     (124, 'Iiris', 'Heikkinen', 'iiris.heikkinen@smartech.com', '1234567915', 'Smartech Innovations', 'Technology', 'Tech Expo 2023', 'qualified', '2023-07-10', '2024-05-15'),
@@ -94,15 +96,15 @@ INSERT INTO leads VALUES
     (131, 'Akseli', 'Salmi', 'akseli.salmi@infosol.com', '1234567922', 'InfoSolutions Ltd.', 'Technology', 'referral', 'contacted', '2023-09-20', '2024-05-10'),
     (132, 'Aina', 'Saari', 'aina.saari@brighterfuture.com', '1234567923', 'Brighter Future Ltd.', 'Technology', 'Referral', 'converted', '2023-07-02', '2024-05-15'),
     (133, 'Tino', 'Laitinen', 'tino.laitinen@datainsights.com', '1234567924', 'Data Insights', 'Technology', 'Webinar', 'contacted', '2024-02-15', '2024-05-10'),
-    (134, 'Emma', 'Andersson', 'emma.andersson@acmecompany.com', '1234567925', 'ACME Company', 'Retail', 'Webinar', 'new', '2024-03-15', '2024-05-10'),
-    (135, 'Oscar', 'Nilsson', 'oscar.nilsson@techsolutions.com', '1234567926', 'Tech Solutions', 'Technology', 'Cold Call', 'qualified', '2024-04-10', '2024-05-20'),
+    (134, 'Emma', 'Andersson', 'emma.andersson@acmecompany.com', '1234567925', 'ACME Company', 'Retail', 'Webinar', 'lost', '2024-03-15', '2024-05-10'),
+    (135, 'Oscar', 'Nilsson', 'oscar.nilsson@techsolutions.com', '1234567926', 'Tech Solutions', 'Technology', 'Cold Call', 'lost', '2024-04-10', '2024-05-20'),
     (136, 'Ella', 'Lindgren', 'ella.lindgren@bigdataco.com', '1234567927', 'Big Data Co.', 'Technology', 'Trade Show', 'converted', '2024-02-28', '2024-05-18'),
     (137, 'Adam', 'Johansson', 'adam.johansson@innovatecorp.com', '1234567928', 'Innovate Corp.', 'Technology', 'Email Campaign', 'contacted', '2024-04-05', '2024-05-14'),
     (138, 'Julia', 'Eriksson', 'julia.eriksson@pharmasolutions.com', '1234567929', 'Pharma Solutions', 'Healthcare', 'Referral', 'qualified', '2024-04-20', '2024-05-16'),
     (139, 'Liam', 'Persson', 'liam.persson@globalbizinc.com', '1234567930', 'Global Biz Inc.', 'Finance', 'conference', 'contacted', '2024-04-12', '2024-05-11'),
     (140, 'Maja', 'Svensson', 'maja.svensson@medtechsolutions.com', '1234567931', 'MedTech Solutions', 'Healthcare', 'Trade Show', 'contacted', '2024-03-25', '2024-05-19'),
     (141, 'Noah', 'Larsson', 'noah.larsson@smarttechcorp.com', '1234567932', 'Smart Tech Corp.', 'Technology', 'Webinar', 'qualified', '2024-04-02', '2024-05-13'),
-    (142, 'Wilma', 'Gustafsson', 'wilma.gustafsson@startupventures.com', '1234567933', 'Startup Ventures', 'Technology', 'Referral', 'lost', '2023-12-10', '2024-05-17'),
+    (142, 'Wilma', 'Gustafsson', 'wilma.gustafsson@startupventures.com', '1234567933', 'Startup Ventures', 'Technology', 'website', 'lost', '2023-12-10', '2024-05-17'),
     (143, 'Lucas', 'Lindqvist', 'lucas.lindqvist@newhorizoninc.com', '1234567934', 'New Horizon Inc.', 'Technology', 'Email Campaign', 'new', '2024-05-02', '2024-05-15'),
     (144, 'Alice', 'Berg', 'alice.berg@logisticsgroup.com', '1234567935', 'Logistics Group', 'Logistics', 'conference', 'contacted', '2024-04-18', '2024-05-10'),
     (145, 'Elias', 'Nyström', 'elias.nystrom@energyinnovations.com', '1234567936', 'Energy Innovations', 'Energy', 'Trade Show', 'qualified', '2024-03-30', '2024-05-12'),
@@ -114,7 +116,7 @@ INSERT INTO leads VALUES
     (151, 'Oskar', 'Koskinen', 'oskar.koskinen@techgroup.com', '1234567942', 'Tech Group', 'Technology', 'Trade Show', 'qualified', '2023-10-20', '2024-05-15'),
     (152, 'Ellen', 'Rantanen', 'ellen.rantanen@medicalsolutions.com', '1234567943', 'Medical Solutions', 'Healthcare', 'Referral', 'new', '2024-05-05', '2024-05-17'),
     (153, 'Leo', 'Heikkinen', 'leo.heikkinen@smartenergygroup.com', '1234567944', 'Smart Energy Group', 'Energy', 'Website', 'contacted', '2024-04-10', '2024-05-19'),
-    (154, 'Saga', 'Peltola', 'saga.peltola@consultingcorp.com', '1234567945', 'Consulting Corp.', 'Consulting', 'Cold Call', 'qualified', '2022-08-28', '2024-05-14'),
+    (154, 'Saga', 'Peltola', 'saga.peltola@consultingcorp.com', '1234567945', 'Consulting Corp.', 'Consulting', 'referral', 'qualified', '2022-08-28', '2024-05-14'),
     (155, 'Max', 'Saarinen', 'max.saarinen@healthcareinnovations.com', '1234567946', 'Healthcare Innovations', 'Healthcare', 'Trade Show', 'contacted', '2024-04-03', '2024-05-12')
 ;
 
@@ -154,7 +156,7 @@ INSERT INTO interactions VALUES
     (50, 142, 201, '2024-05-05', 'Phone Call', 'Discussed product features and pricing.'),
     (51, 100, 202, '2024-05-12', 'Email', 'Sent follow-up email regarding proposal.'),
     (52, 101, 203, '2024-04-09', 'Meeting', 'Had a meeting to discuss project requirements.'),
-    (53, 102, 204, '2024-03-10', 'Demo', 'Provided a demo of our software solution.'),
+    (53, 102, 204, '2024-03-10', 'Demo', 'Presented customized demo based on client needs.'),
     (54, 103, 205, '2024-02-12', 'Follow-up Call', 'Followed up on previous discussions.'),
     (55, 104, 206, '2024-01-14', 'Email', 'Sent email with additional information.'),
     (56, 144, 208, '2024-05-16', 'Meeting', 'Scheduled meeting for further discussions.'),
@@ -171,7 +173,7 @@ INSERT INTO interactions VALUES
     (67, 148, 219, '2024-03-07', 'Meeting', 'Scheduled kickoff meeting for project.'),
     (68, 117, 220, '2024-03-09', 'Phone Call', 'Reviewed project requirements over the phone.'),
     (69, 118, 221, '2024-04-11', 'Follow-up Email', 'Sent follow-up email with meeting summary.'),
-    (70, 149, 222, '2024-05-13', 'Demo', 'Presented customized demo based on client needs.'),
+    (70, 149, 222, '2024-05-13', 'Demo', 'Provided a demo of our software solution.'),
     (71, 120, 222, '2024-04-15', 'Meeting', 'Met with stakeholders to discuss project scope.'),
     (72, 121, 223, '2024-02-17', 'Phone Call', 'Discussed project timeline and deliverables.'),
     (73, 122, 225, '2024-03-19', 'Email', 'Sent email with project roadmap.'),
@@ -187,7 +189,7 @@ INSERT INTO interactions VALUES
     (83, 132, 204, '2024-03-09', 'Meeting', 'Conducted project status meeting with stakeholders.'),
     (84, 133, 205, '2024-04-11', 'Phone Call', 'Addressed client questions and concerns.'),
     (85, 154, 206, '2024-03-13', 'Follow-up Email', 'Sent follow-up email with action items.'),
-    (86, 135, 207, '2024-04-15', 'Demo', 'Provided training demo for new system features.'),
+    (86, 125, 207, '2024-04-15', 'Demo', 'Provided training demo for new system features.'),
     (87, 136, 208, '2024-03-17', 'Meeting', 'Met with project team to discuss next steps.'),
     (88, 137, 209, '2024-02-19', 'Phone Call', 'Discussed project timeline updates.'),
     (89, 138, 210, '2024-01-21', 'Follow-up Call', 'Followed up on client feedback.'),
@@ -197,7 +199,7 @@ INSERT INTO interactions VALUES
 ;
 
 INSERT INTO lead_assignments VALUES 
-    (1, 100, 202, '2024-05-20'),
+	(1, 100, 202, '2024-05-20'),
     (2, 101, 203, '2024-03-20'),
     (3, 102, 204, '2024-04-03'),
     (4, 104, 206, '2024-01-25'),
@@ -211,7 +213,7 @@ INSERT INTO lead_assignments VALUES
     (12, 117, 220, '2024-03-09'),
     (13, 118, 221, '2024-03-10'),
     (14, 120, 222, '2024-05-20'),
-    (15, 121, 225, '2024-04-15'),
+    (15, 144, 225, '2024-04-15'),
     (16, 122, 225, '2024-01-20'),
     (17, 104, 206, '2023-02-20'),
     (18, 103, 224, '2024-05-15'),
@@ -221,11 +223,12 @@ INSERT INTO lead_assignments VALUES
     (22, 115, 218, '2024-04-10'),
     (23, 151, 201, '2024-01-10'),
     (24, 145, 209, '2024-05-01'),
-    (25, 129, 202, '2024-02-01')
+    (25, 129, 202, '2024-02-01'),
+    (26, 125, 207, '2024-04-20')
 ;
 
 INSERT INTO opportunities VALUES
-    (1, 103, 'PXT400T', 400000, 'qualification', 205),
+	(1, 103, 'PXT400T', 400000, 'qualification', 205),
     (2, 104, 'PMR2500', 500000, 'negotiation', 203),
     (3, 109, 'PXT400H', 500000, 'negotiation', 211),
     (4, 111, 'PMR70i', 450000, 'qualification', 209),
