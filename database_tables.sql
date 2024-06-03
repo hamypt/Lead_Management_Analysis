@@ -40,7 +40,7 @@ CREATE TABLE lead_assignments (
 	user_id INT,
 	assignment_date DATE,
 	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE CASCADE
+	FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE SET NULL
 ); 
 
 CREATE TABLE opportunities (
