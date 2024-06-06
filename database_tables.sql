@@ -39,7 +39,7 @@ CREATE TABLE lead_assignments (
 	lead_id INT,
 	user_id INT,
 	assignment_date DATE,
-	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE,
+	FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE SET NULL,
 	FOREIGN KEY (user_id) REFERENCES sales_team(user_id) ON DELETE SET NULL
 ); 
 
